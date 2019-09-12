@@ -1,0 +1,9 @@
+
+
+S3 aws-cf-test
+
+aws cloudformation validate-template --template-body file://./templates/dynamodb.yaml
+
+aws cloudformation package --s3-bucket aws-cf-test --template templates/dynamodb.yaml --output-template-file output.yaml
+
+aws cloudformation deploy --template-file output.yaml --stack-name test-dynamo --capabilities CAPABILITY_NAMED_IAM

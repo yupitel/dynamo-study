@@ -1,0 +1,116 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  LocationTypeRcu:
+    Description: LocationTypeRcu
+    Type: String
+    Default: 1
+  LocationTypeWcu:
+    Description: LocationTypeWcu
+    Type: String
+    Default: 1
+  RouteTableName:
+    Description: Route table name
+    Type: String
+    Default: RouteTable
+  RouteLaneTableName:
+    Description: Route lane table name
+    Type: String
+    Default: RouteLaneTable
+
+Resources:
+  RouteTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref RouteTableName
+      AttributeDefinitions:
+      - AttributeName: routeId
+        AttributeType: N
+      - AttributeName: vehicleId
+        AttributeType: N
+      - AttributeName: geoHash5
+        AttributeType: S
+      - AttributeName: createdAt
+        AttributeType: N
+      KeySchema:
+      - AttributeName: routeId
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref LocationTypeRcu
+        WriteCapacityUnits: !Ref LocationTypeWcu
+      GlobalSecondaryIndexes:
+      - IndexName: route-index
+        KeySchema:
+        - AttributeName: routeId
+          KeyType: HASH
+        - AttributeName: createdAt
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: !Ref LocationTypeRcu
+          WriteCapacityUnits: !Ref LocationTypeWcu
+      - IndexName: vehicle-index
+        KeySchema:
+        - AttributeName: vehicleId
+          KeyType: HASH
+        - AttributeName: createdAt
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:ls
+          ReadCapacityUnits: !Ref LocationTypeRcu
+          WriteCapacityUnits: !Ref LocationTypeWcu
+      - IndexName: geoHash5-index
+        KeySchema:
+        - AttributeName: geoHash5
+          KeyType: HASH
+        - AttributeName: createdAt
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: !Ref LocationTypeRcu
+          WriteCapacityUnits: !Ref LocationTypeWcu
+  RouteLaneTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref RouteLaneTableName
+      AttributeDefinitions:
+      - AttributeName: routeId
+        AttributeType: N
+      - AttributeName: laneId
+        AttributeType: N
+      - AttributeName: createdAt
+        AttributeType: N
+      KeySchema:
+      - AttributeName: routeId
+        KeyType: HASH
+      - AttributeName: laneId
+        KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref LocationTypeRcu
+        WriteCapacityUnits: !Ref LocationTypeWcu
+      GlobalSecondaryIndexes:
+      - IndexName: route-index
+        KeySchema:
+        - AttributeName: routeId
+          KeyType: HASH
+        - AttributeName: createdAt
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: !Ref LocationTypeRcu
+          WriteCapacityUnits: !Ref LocationTypeWcu
+      - IndexName: lane-index
+        KeySchema:
+        - AttributeName: laneId
+          KeyType: HASH
+        - AttributeName: createdAt
+          KeyType: RANGE
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: !Ref LocationTypeRcu
+          WriteCapacityUnits: !Ref LocationTypeWcu
+
